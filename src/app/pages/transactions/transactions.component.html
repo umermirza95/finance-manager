@@ -1,0 +1,10 @@
+<app-header [text]="'Transactions'"></app-header>
+<div class="container">
+    <div class="topContainer">
+        <button nz-button nzType="primary"><i nz-icon nzType="filter"></i>Filter</button>
+        <button (click)="showAddModal()" nz-button nzType="primary"><i nz-icon nzType="plus"></i>Transactions</button>
+    </div>
+</div>
+<nz-modal [(nzVisible)]="addModalVisible" nzTitle="Add Transaction" (nzOnCancel)="hideAddModal()" (nzOnOk)="addTransaction()" [nzOkLoading]="addingTransaction">
+    <p *nzModalContent>Modal Content</p>
+</nz-modal>

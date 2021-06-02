@@ -1,0 +1,38 @@
+<nz-layout class="app-layout">
+    <div nz-row class="inner-content">
+        <div nz-col nzXs="16" nzSm="14" nzMd="8" nzLg="6" nzXl="6" style="background: #f7f7f7 ; box-shadow: 0px 2px 2px rgb(0 0 0 / 30%); padding: 30px;">
+            <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+                <h1>Login</h1>
+                <nz-form-item>
+                    <nz-form-control [nzErrorTip]="emailError">
+                        <nz-input-group nzPrefixIcon="user">
+                            <input type="text" nz-input formControlName="userName" placeholder="Username" />
+                            <ng-template #emailError>
+                                <div *ngIf="validateForm.get('userName')?.hasError('required')">
+                                    Email is required!
+                                </div>
+                                <div *ngIf="validateForm.get('userName')?.hasError('email')">
+                                    Email is not valid!
+                                </div>
+                            </ng-template>
+                        </nz-input-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control [nzErrorTip]="passwordError">
+                        <nz-input-group nzPrefixIcon="lock">
+                            <input type="password" nz-input formControlName="password" placeholder="Password" />
+                        </nz-input-group>
+                        <ng-template #passwordError>
+                            <div *ngIf="validateForm.get('password')?.hasError('required')">
+                                Password is required!
+                            </div>
+                        </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+                <button nz-button class="login-form-button" [nzType]="'primary'">Log
+                    in</button>
+            </form>
+        </div>
+    </div>
+</nz-layout>

@@ -1,0 +1,33 @@
+<nz-layout class="app-layout">
+    <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+        <div class="sidebar-logo">
+            <a href="https://ng.ant.design/" target="_blank">
+                <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+                <h1>Ant Design Of Angular</h1>
+            </a>
+        </div>
+        <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+            <li routerLink="/transactions" nz-menu-item nzMatchRouter>
+                <i nz-icon nzType="dollar-circle"></i>
+                <span>Transactions</span>
+            </li>
+        </ul>
+    </nz-sider>
+    <nz-layout>
+        <nz-header>
+            <div class="app-header">
+                <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+                    <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+                </span>
+                <span class="header-trigger" (click)="logout()">
+                    <i class="trigger" nz-icon nzType="user"></i>
+                </span>
+            </div>
+        </nz-header>
+        <nz-content>
+            <div class="inner-content">
+                <router-outlet></router-outlet>
+            </div>
+        </nz-content>
+    </nz-layout>
+</nz-layout>
