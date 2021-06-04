@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Category } from 'src/app/models/Category';
+import { Transaction } from 'src/app/models/Transaction';
+import { DataService } from 'src/app/services/data.service';
 
 
 @Component({
@@ -10,16 +13,23 @@ export class TransactionsComponent implements OnInit {
 
 	addModalVisible: boolean = false;
 	addingTransaction: boolean = false;
+	transaction = new Transaction();
+	selectedValue: string = null;
+	allcategories:Array<Category>=[];
+	categories:Array<Category>=[];
 
-	constructor() { }
+	constructor(
+		private dataService: DataService
+	) { }
 
-	ngOnInit(): void {
-
+	async ngOnInit() {
+		this.allcategories = await this.dataService.getCategories();
+		this.categories=this.allcategories.filter((category)=>{return category.type === this.transaction.type });
 	}
 
 
-	showAddModal(){
-		this.addModalVisible=true;
+	showAddModal() {
+		this.addModalVisible = true;
 	}
 
 	hideAddModal() {
