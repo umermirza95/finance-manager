@@ -33,13 +33,13 @@
         <nz-form-item>
             <nz-form-label [nzSm]="8" [nzXs]="24">Date</nz-form-label>
             <nz-form-control [nzSm]="12" [nzXs]="24">
-                <nz-date-picker style="width: 100%;"></nz-date-picker>
+                <nz-date-picker nzFormat="dd-MM-yyyy" name="timestamp" [(ngModel)]="date" style="width: 100%;"></nz-date-picker>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzSm]="8" [nzXs]="24">Comments</nz-form-label>
             <nz-form-control [nzSm]="12" [nzXs]="24">
-                <textarea style="width: 100%;" nz-input placeholder="Comments"></textarea>
+                <textarea name="comment" [(ngModel)]="transaction.comment" style="width: 100%;" nz-input placeholder="Comments"></textarea>
             </nz-form-control>
         </nz-form-item>
     </form>

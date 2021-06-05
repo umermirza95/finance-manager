@@ -8,7 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzFormModule } from 'ng-zorro-antd/form';
-
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzMessageModule } from 'ng-zorro-antd/message';
 
 import { TransactionsRoutingModule } from './transactions-routing.module';
 import { TransactionsComponent } from './transactions.component';
@@ -31,12 +32,10 @@ import { HeaderComponent } from '../../components/header/header.component'
 		FormsModule,
 		NzDatePickerModule,
 		NzSelectModule,
-		NzFormModule
+		NzFormModule,
+		NzInputModule,
+		NzMessageModule
 	]
 })
 export class TransactionsModule {
-
-	
-
-
 }
