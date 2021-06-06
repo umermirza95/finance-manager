@@ -10,7 +10,7 @@ import { Transaction } from '../models/Transaction';
 
 const BASE_URL = environment.baseApiUrl;
 const CATEGORY = BASE_URL + "/category";
-const TRANSACTION=BASE_URL+"/transaction";
+const TRANSACTION = BASE_URL + "/transaction";
 
 @Injectable({
 	providedIn: 'root'
@@ -20,34 +20,51 @@ export class DataService {
 
 	constructor(
 		private http: HttpClient
-	) {}
+	) { }
 
-	async getHeaders(){
-		return new Promise(async (resolve,reject)=>{
-			let idToken=await firebase.auth().currentUser.getIdToken();
-			resolve({Authorization:"Bearer "+idToken});
+	async getHeaders() {
+		return new Promise(async (resolve, reject) => {
+			let idToken = await firebase.auth().currentUser.getIdToken();
+			resolve({ Authorization: "Bearer " + idToken });
 		});
 	}
 
 	getCategories(): Promise<Array<Category>> {
 		return new Promise<Array<Category>>(async (resolve, reject) => {
-			this.headers= await this.getHeaders();
-			this.http.get<Array<Category>>(CATEGORY,{headers:this.headers}).subscribe((res) => {
+			this.headers = await this.getHeaders();
+			this.http.get<Array<Category>>(CATEGORY, { headers: this.headers }).subscribe((res) => {
 				resolve(res);
 			})
 		});
 	}
 
-	createTransaction(transaction:Transaction) : Promise<Transaction>{
-		return new Promise<Transaction>(async (resolve,reject)=>{
-			this.headers= await this.getHeaders();
-			this.http.post<Transaction>(TRANSACTION, transaction.toJson(), {headers:this.headers}).subscribe((res)=>{
+	createTransaction(transaction: Transaction): Promise<Transaction> {
+		return new Promise<Transaction>(async (resolve, reject) => {
+			this.headers = await this.getHeaders();
+			this.http.post<Transaction>(TRANSACTION, transaction.toJson(), { headers: this.headers }).subscribe((res) => {
 				resolve(res);
-			},(error)=>{
+			}, (error) => {
 				console.log(error);
 				reject(error);
 			});
 		});
+	}
+
+	getTransactions(filters: any): Promise<Array<Transaction>> {
+		return new Promise<Array<Transaction>>(async (resolve, reject) => {
+			this.headers = await this.getHeaders();
+			let queryParams = "?";
+			let filterKeys = Object.keys(filters);
+			filterKeys.forEach(key => {
+				queryParams = queryParams + key + "=" + filters[key] + "&";
+
+			});
+			this.http.get<Array<Transaction>>(TRANSACTION+queryParams,{headers:this.headers}).subscribe((res)=>{
+				resolve(res)
+			},(error)=>{
+				reject(error);
+			})
+		})
 	}
 
 }

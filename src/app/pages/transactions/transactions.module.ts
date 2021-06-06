@@ -10,6 +10,9 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageModule } from 'ng-zorro-antd/message';
+import { NzStatisticModule } from 'ng-zorro-antd/statistic';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 import { TransactionsRoutingModule } from './transactions-routing.module';
 import { TransactionsComponent } from './transactions.component';
@@ -34,7 +37,11 @@ import { HeaderComponent } from '../../components/header/header.component'
 		NzSelectModule,
 		NzFormModule,
 		NzInputModule,
-		NzMessageModule
+		NzMessageModule,
+		NzStatisticModule,
+		NzTableModule,
+		NzDividerModule
+
 	]
 })
 export class TransactionsModule {

@@ -10,10 +10,13 @@
 }
 
 .menu-sidebar {
-    position: relative;
     z-index: 10;
     min-height: 100vh;
     box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    top: 0;
 }
 
 .header-trigger {
@@ -59,6 +62,10 @@ nz-header {
     padding: 0;
     width: 100%;
     z-index: 2;
+    position: -webkit-sticky;
+    /* Safari */
+    position: sticky;
+    top: 0;
 }
 
 .app-header {

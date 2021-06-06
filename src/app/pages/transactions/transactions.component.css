@@ -1,9 +1,11 @@
 .container {
     padding: 24px;
+    height: 88%;
 }
 
 .topContainer {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    margin-bottom: 20px;
 }

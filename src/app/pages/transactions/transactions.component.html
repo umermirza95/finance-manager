@@ -4,6 +4,35 @@
         <button nz-button nzType="primary"><i nz-icon nzType="filter"></i>Filter</button>
         <button (click)="showAddModal()" nz-button nzType="primary"><i nz-icon nzType="plus"></i>Transactions</button>
     </div>
+    <nz-row nzJustify="space-between">
+        <nz-col nzXs="24" nzSm="24" nzMd="8" nzLg="8">
+            <nz-statistic [nzValue]="totalExpense" [nzTitle]="'Expenses (PKR)'"></nz-statistic>
+        </nz-col>
+    </nz-row>
+    <div style="width: 100%; height: 79%; overflow-y: scroll;">
+        <nz-table style="overflow-y: scroll;" #basicTable [nzData]="transactions">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Comment</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of basicTable.data">
+                    <td>{{ data.amount }}</td>
+                    <td>{{ categoryTable[data.categoryId].name}}</td>
+                    <td>{{ data.comment }}</td>
+                    <td>
+                        <a>Edit</a>
+                        <nz-divider nzType="vertical"></nz-divider>
+                        <a>Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
 </div>
 <nz-modal [(nzVisible)]="addModalVisible" nzTitle="Add Transaction" (nzOnCancel)="hideAddModal()" (nzOnOk)="addTransaction()" [nzOkDisabled]="!transaction.categoryId || !transaction.amount" [nzOkLoading]="addingTransaction">
     <form nz-form>
@@ -20,7 +49,8 @@
             <nz-form-label nzRequired [nzSm]="8" [nzXs]="24">Category</nz-form-label>
             <nz-form-control [nzSm]="12" [nzXs]="24">
                 <nz-select style="width: 100%;" name="category" nzShowSearch nzAllowClear nzPlaceHolder="Select a category" [(ngModel)]="transaction.categoryId">
-                    <nz-option *ngFor="let category of categories" [nzLabel]="category.name" [nzValue]="category.id"></nz-option>
+                    <nz-option *ngFor="let category of categories" [nzLabel]="category.name" [nzValue]="category.id">
+                    </nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
@@ -33,7 +63,8 @@
         <nz-form-item>
             <nz-form-label [nzSm]="8" [nzXs]="24">Date</nz-form-label>
             <nz-form-control [nzSm]="12" [nzXs]="24">
-                <nz-date-picker nzFormat="dd-MM-yyyy" name="timestamp" [(ngModel)]="date" style="width: 100%;"></nz-date-picker>
+                <nz-date-picker nzFormat="dd-MM-yyyy" name="timestamp" [(ngModel)]="date" style="width: 100%;">
+                </nz-date-picker>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
