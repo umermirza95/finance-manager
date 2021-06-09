@@ -56,12 +56,14 @@ export class DataService {
 			let queryParams = "?";
 			let filterKeys = Object.keys(filters);
 			filterKeys.forEach(key => {
-				queryParams = queryParams + key + "=" + filters[key] + "&";
+				if (filters[key]) {
+					queryParams = queryParams + key + "=" + filters[key] + "&";
+				}
 
 			});
-			this.http.get<Array<Transaction>>(TRANSACTION+queryParams,{headers:this.headers}).subscribe((res)=>{
+			this.http.get<Array<Transaction>>(TRANSACTION + queryParams, { headers: this.headers }).subscribe((res) => {
 				resolve(res)
-			},(error)=>{
+			}, (error) => {
 				reject(error);
 			})
 		})

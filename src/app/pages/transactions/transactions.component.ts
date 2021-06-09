@@ -22,9 +22,16 @@ export class TransactionsComponent implements OnInit {
 	transactions: Array<Transaction> = [];
 	categories: Array<Category> = [];
 	date: Date = new Date();
-	filter: any = {};
+	rangeDate: Array<Date>;
+	filter: any = {
+		from: new Date().getTime(),
+		to: new Date().getTime(),
+		type: null,
+		active: false
+	};
 	totalExpense: string = "";
 	totalIncome: string = "";
+	dateParser = Utilities.dateParser;
 
 	constructor(
 		private dataService: DataService,
@@ -32,16 +39,44 @@ export class TransactionsComponent implements OnInit {
 	) { }
 
 	async ngOnInit() {
+
+		this.initFilter();
+		this.fetchCategories();
+		this.fetchTransactions();
+	}
+
+	initFilter() {
+		let date = new Date();
+		this.rangeDate = [];
+		this.rangeDate[0] = new Date(date.getFullYear(), date.getMonth(), 1);
+		this.rangeDate[1] = new Date(date.getFullYear(), date.getMonth(), new Date(date.getFullYear(), date.getMonth(), 0).getDate() - 1);
+		this.filter.from = this.rangeDate[0].getTime();
+		this.filter.to = this.rangeDate[1].getTime();
+	}
+
+	onTypeChanged(newType: string) {
+		this.categories = this.allcategories.filter((category) => { return category.type === newType });
+		this.transaction.categoryId = null;
+	}
+
+	async fetchCategories() {
 		this.allcategories = await this.dataService.getCategories();
 		this.allcategories.forEach((cat) => {
 			this.categoryTable[cat.id] = { name: cat.name }
-		})
-		this.categories = this.allcategories.filter((category) => { return category.type === this.transaction.type });
-		let date = new Date();
-		this.filter.from = new Date(date.getFullYear(), date.getMonth(), 1).getTime();
-		this.filter.to = new Date(date.getFullYear(), date.getMonth(), new Date(date.getFullYear(), date.getMonth(), 0).getDate()).getTime();
-		this.transactions = await this.dataService.getTransactions(this.filter);
-		this.ontransactionsReceived();
+		});
+		this.onTypeChanged(this.transaction.type);
+	}
+
+	async fetchTransactions() {
+		try {
+			this.transactions = [];
+			this.transactions = await this.dataService.getTransactions(this.filter);
+			this.ontransactionsReceived();
+		}
+		catch (error) {
+			console.log(error);
+			this.message.create("error", "Failed to fetch transactions");
+		}
 	}
 
 
@@ -49,12 +84,17 @@ export class TransactionsComponent implements OnInit {
 		this.totalExpense = "";
 		this.totalIncome = "";
 		let exp = 0;
+		let inc = 0;
 		this.transactions.forEach(trans => {
 			if (trans.type === Utilities.transactionTypes.expense) {
 				exp += trans.amount;
 			}
+			else {
+				inc += trans.amount;
+			}
 		});
 		this.totalExpense = exp.toLocaleString();
+		this.totalIncome = inc.toLocaleString();
 	}
 
 	showAddModal() {
@@ -73,6 +113,7 @@ export class TransactionsComponent implements OnInit {
 				this.transaction.timestamp = this.date.getTime();
 			}
 			const newtrans = await this.dataService.createTransaction(this.transaction);
+			this.fetchTransactions();
 			this.message.create("success", "Transaction saved successfully!");
 			console.log(newtrans.id);
 			this.addingTransaction = false;
@@ -82,6 +123,13 @@ export class TransactionsComponent implements OnInit {
 			this.addingTransaction = false;
 			this.message.create("error", "Failed to save transaction");
 		}
+	}
+
+	applyFilter() {
+		this.filter.from = this.rangeDate[0].getTime();
+		this.filter.to = this.rangeDate[1].getTime();
+		this.fetchTransactions();
+		this.filter.active = false;
 	}
 
 }
