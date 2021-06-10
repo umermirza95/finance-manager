@@ -4,7 +4,14 @@ import { Transaction } from 'src/app/models/Transaction';
 import { DataService } from 'src/app/services/data.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Utilities } from 'src/app/utilities/Utilities';
+import { NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 
+interface ColumnItem {
+	name: string;
+	sortOrder: NzTableSortOrder | null;
+	sortFn: NzTableSortFn | null;
+	sortDirections: NzTableSortOrder[];
+}
 
 @Component({
 	selector: 'app-transactions',
@@ -29,9 +36,28 @@ export class TransactionsComponent implements OnInit {
 		type: null,
 		active: false
 	};
+	sort: any = {
+		dateSort: 'descend',
+		amountSort: null,
+	};
 	totalExpense: string = "";
 	totalIncome: string = "";
 	dateParser = Utilities.dateParser;
+	listOfColumns: ColumnItem[] = [
+		{
+			name: 'Amount',
+			sortOrder: null,
+			sortFn: (a: Transaction, b: Transaction) => a.amount > b.amount ? 1 : -1,
+			sortDirections: ['ascend', 'descend',]
+		},
+		{
+			name: 'Date',
+			sortOrder: 'descend',
+			sortFn: (a: Transaction, b: Transaction) => a.timestamp > b.timestamp ? 1 : -1,
+			sortDirections: ['ascend', 'descend'],
+
+		}
+	];
 
 	constructor(
 		private dataService: DataService,
@@ -69,7 +95,6 @@ export class TransactionsComponent implements OnInit {
 
 	async fetchTransactions() {
 		try {
-			this.transactions = [];
 			this.transactions = await this.dataService.getTransactions(this.filter);
 			this.ontransactionsReceived();
 		}
@@ -128,6 +153,9 @@ export class TransactionsComponent implements OnInit {
 	applyFilter() {
 		this.filter.from = this.rangeDate[0].getTime();
 		this.filter.to = this.rangeDate[1].getTime();
+		this.totalExpense = "";
+		this.totalIncome = "";
+		this.transactions=[];
 		this.fetchTransactions();
 		this.filter.active = false;
 	}

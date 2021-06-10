@@ -16,6 +16,11 @@
                 </nz-select>
             </li>
             <li nz-menu-item>
+                <nz-select style="min-width: 50%;" nzAllowClear nzPlaceHolder="Category" [(ngModel)]="filter.categoryId">
+                    <nz-option *ngFor="let cat of allcategories" [nzLabel]="cat.name" [nzValue]="cat.id"></nz-option>
+                </nz-select>
+            </li>
+            <li nz-menu-item>
                 <button (click)="applyFilter()" nz-button nzType="primary">Apply</button>
             </li>
         </ul>
@@ -26,11 +31,12 @@
         </nz-col>
     </nz-row>
     <div style="width: 100%; height: 79%; overflow-y: scroll;">
-        <nz-table style="overflow-y: scroll;" #basicTable [nzData]="transactions" [nzScroll]="{ y: '240px' }">
+        <nz-table style="overflow-y: scroll;" #basicTable [nzShowPagination]="false" [nzPageSize]="300" [nzData]="transactions" [nzScroll]="{ y: '240px' }">
             <thead>
                 <tr>
-                    <th>Amount</th>
-                    <th>Date</th>
+                    <th *ngFor="let column of listOfColumns" [nzSortOrder]="column.sortOrder" [nzSortFn]="column.sortFn" [nzSortDirections]="column.sortDirections">
+                        {{ column.name }}
+                    </th>
                     <th>Category</th>
                     <th>Comment</th>
                     <th>Action</th>
