@@ -10,13 +10,13 @@
                 <nz-range-picker [nzAllowClear]="false" nzFormat="dd-MM-yyyy" [(ngModel)]="rangeDate"></nz-range-picker>
             </li>
             <li nz-menu-item>
-                <nz-select style="min-width: 50%;" nzAllowClear nzPlaceHolder="Transaction Type" [(ngModel)]="filter.type">
+                <nz-select style="width: 100%;" nzAllowClear nzPlaceHolder="Transaction Type" [(ngModel)]="filter.type">
                     <nz-option nzLabel="Expense" nzValue="expense"></nz-option>
                     <nz-option nzLabel="Income" nzValue="income"></nz-option>
                 </nz-select>
             </li>
             <li nz-menu-item>
-                <nz-select style="min-width: 50%;" nzAllowClear nzPlaceHolder="Category" [(ngModel)]="filter.categoryId">
+                <nz-select style="width: 100%;" nzAllowClear nzPlaceHolder="Category" [(ngModel)]="filter.categoryId">
                     <nz-option *ngFor="let cat of allcategories" [nzLabel]="cat.name" [nzValue]="cat.id"></nz-option>
                 </nz-select>
             </li>
@@ -49,9 +49,9 @@
                     <td>{{ categoryTable[data.categoryId].name}}</td>
                     <td>{{ data.comment }}</td>
                     <td>
-                        <a>Edit</a>
+                        <a (click)="showAddModal(data)">Edit</a>
                         <nz-divider nzType="vertical"></nz-divider>
-                        <a>Delete</a>
+                        <a (click)="showDeleteModal(data)">Delete</a>
                     </td>
                 </tr>
             </tbody>
@@ -98,4 +98,7 @@
             </nz-form-control>
         </nz-form-item>
     </form>
+</nz-modal>
+<nz-modal [(nzVisible)]="deleteModalVisible" nzTitle="Delete Transaction" (nzOnCancel)="hideAddModal()" (nzOnOk)="deleteTransaction()" [nzOkLoading]="addingTransaction">
+    Are you sure you want to delete this transaction? This action can not be reverted!
 </nz-modal>

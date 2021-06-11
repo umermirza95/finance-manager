@@ -21,6 +21,7 @@ interface ColumnItem {
 export class TransactionsComponent implements OnInit {
 
 	addModalVisible: boolean = false;
+	deleteModalVisible: boolean = false;
 	addingTransaction: boolean = false;
 	transaction = new Transaction();
 	selectedValue: string = null;
@@ -67,7 +68,11 @@ export class TransactionsComponent implements OnInit {
 	async ngOnInit() {
 
 		this.initFilter();
-		this.fetchCategories();
+		this.allcategories = await this.dataService.getCategories();
+		this.allcategories.forEach((cat) => {
+			this.categoryTable[cat.id] = { name: cat.name }
+		});
+		this.onTypeChanged(this.transaction.type);
 		this.fetchTransactions();
 	}
 
@@ -83,14 +88,6 @@ export class TransactionsComponent implements OnInit {
 	onTypeChanged(newType: string) {
 		this.categories = this.allcategories.filter((category) => { return category.type === newType });
 		this.transaction.categoryId = null;
-	}
-
-	async fetchCategories() {
-		this.allcategories = await this.dataService.getCategories();
-		this.allcategories.forEach((cat) => {
-			this.categoryTable[cat.id] = { name: cat.name }
-		});
-		this.onTypeChanged(this.transaction.type);
 	}
 
 	async fetchTransactions() {
@@ -122,22 +119,43 @@ export class TransactionsComponent implements OnInit {
 		this.totalIncome = inc.toLocaleString();
 	}
 
-	showAddModal() {
+	showAddModal(trans: Transaction = null) {
+		if (trans) {
+			this.transaction = trans.createCopy();
+			this.date = new Date(this.transaction.timestamp);
+			console.log(this.transaction.id);
+		}
+		else {
+			this.transaction = new Transaction();
+
+		}
+		this.categories = this.allcategories.filter((category) => { return category.type === this.transaction.type });
 		this.addModalVisible = true;
 	}
 
+	showDeleteModal(trans: Transaction) {
+		this.transaction = trans.createCopy();
+		this.deleteModalVisible = true;
+	}
+
 	hideAddModal() {
-		this.addModalVisible = false;
-		this.transaction = new Transaction();
+		if (!this.addingTransaction) {
+			this.addModalVisible = false;
+			this.deleteModalVisible = false;
+		}
 	}
 
 	async addTransaction() {
 		try {
 			this.addingTransaction = true;
-			if (this.date) {
-				this.transaction.timestamp = this.date.getTime();
+			this.transaction.timestamp = this.date.getTime();
+			let newtrans: Transaction;
+			if (this.transaction.id) {
+				newtrans = await this.dataService.editTransaction(this.transaction);
 			}
-			const newtrans = await this.dataService.createTransaction(this.transaction);
+			else {
+				newtrans = await this.dataService.createTransaction(this.transaction);
+			}
 			this.fetchTransactions();
 			this.message.create("success", "Transaction saved successfully!");
 			console.log(newtrans.id);
@@ -150,12 +168,27 @@ export class TransactionsComponent implements OnInit {
 		}
 	}
 
+	async deleteTransaction() {
+		try {
+			this.addingTransaction = true;
+			await this.dataService.deleteTransaction(this.transaction);
+			this.fetchTransactions();
+			this.message.create("success", "Transaction deleted successfully!");
+			this.deleteModalVisible = false;
+			this.addingTransaction = false;
+		}
+		catch (error) {
+			this.addingTransaction = false;
+			this.message.create("error", "Failed to delete transaction");
+		}
+	}
+
 	applyFilter() {
 		this.filter.from = this.rangeDate[0].getTime();
 		this.filter.to = this.rangeDate[1].getTime();
 		this.totalExpense = "";
 		this.totalIncome = "";
-		this.transactions=[];
+		this.transactions = [];
 		this.fetchTransactions();
 		this.filter.active = false;
 	}

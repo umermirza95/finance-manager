@@ -29,8 +29,21 @@ export class Transaction {
             comment:this.comment,
             timestamp:this.timestamp,
             type:this.type,
-            uid:this.uid
+            uid:this.uid,
+            id:this.id
         };
+    }
+
+    createCopy():Transaction{
+        let newtrans=new Transaction();
+        newtrans.id=this.id;
+        newtrans.categoryId=this.categoryId;
+        newtrans.uid=this.uid;
+        newtrans.type=this.type;
+        newtrans.comment=this.comment;
+        newtrans.amount=this.amount;
+        newtrans.timestamp=this.timestamp;
+        return newtrans;
     }
 
 }
