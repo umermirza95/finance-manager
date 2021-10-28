@@ -80,7 +80,7 @@ export class TransactionsComponent implements OnInit {
 		let date = new Date();
 		this.rangeDate = [];
 		this.rangeDate[0] = new Date(date.getFullYear(), date.getMonth(), 1);
-		this.rangeDate[1] = new Date(date.getFullYear(), date.getMonth(), new Date(date.getFullYear(), date.getMonth(), 0).getDate() - 1);
+		this.rangeDate[1] = new Date(date.getFullYear(), date.getMonth(), new Date(date.getFullYear(), date.getMonth(), 0).getDate() + 1);
 		this.filter.from = this.rangeDate[0].getTime();
 		this.filter.to = this.rangeDate[1].getTime();
 	}
